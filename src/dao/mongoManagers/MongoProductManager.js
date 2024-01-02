@@ -1,6 +1,7 @@
 import productModel from '../models/products.model.js';
 
 class MongoProductManager {
+    
     async getProducts() {
         try {
         const products = await productModel.find();

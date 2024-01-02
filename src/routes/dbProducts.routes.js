@@ -1,25 +1,30 @@
 import express from 'express';
 import MongoProductManager from '../dao/mongoManagers/MongoProductManager.js';
+import productModel from '../dao/models/products.model.js';
 
 const router = express.Router();
 const productManager = new MongoProductManager();
 
 router.get('/', async (req, res) => {// Obtiene todos los productos
     try {
-        let products = await productManager.getProducts();
+        
+        const { page } = req.query;
+        const products =  await productModel.paginate(
+            {},
+            {
+                limit: 5,
+                page: page ?? 1,
+                lean: true
+            }
+        );
+        console.log(products);
+        res.render('products', { products });
 
-        const limit = parseInt(req.query.limit, 10);//limita la cantidad de productos a mostrar en la respuesta 
-
-        if (!isNaN(limit) && limit > 0) {
-            products = products.slice(0, limit);
-        }
-
-        res.send({ products });
     } catch (error) {
-        console.error("Error al obtener productos:", error);
+        console.error("Error al obtener los productos:", error);
         res.send({
             status: "error",
-            msg: "Error al obtener productos"
+            msg: "Error al obtener los productos"
         });
     }
 });
