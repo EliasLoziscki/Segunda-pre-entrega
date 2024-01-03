@@ -5,21 +5,23 @@ import productModel from '../dao/models/products.model.js';
 const router = express.Router();
 const productManager = new MongoProductManager();
 
-router.get('/', async (req, res) => {// Obtiene todos los productos
+router.get('/', async (req, res) => {
     try {
-        
-        const { page } = req.query;
-        const products =  await productModel.paginate(
-            {},
-            {
-                limit: 5,
-                page: page ?? 1,
-                lean: true
-            }
-        );
-        console.log(products);
-        res.render('products', { products });
+        const { page = 1, category } = req.query;
+        const limit = 5;
 
+        const query = category ? { category } : {};
+
+        const options = {
+            page,
+            limit,
+            lean: true,
+            leanWithId: false,
+        };
+
+        const products = await productModel.paginate(query, options);
+
+        res.render('products', {  products: products, style: 'index' });
     } catch (error) {
         console.error("Error al obtener los productos:", error);
         res.send({
