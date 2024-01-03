@@ -7,21 +7,24 @@ const productManager = new MongoProductManager();
 
 router.get('/', async (req, res) => {
     try {
-        const { page = 1, category } = req.query;
-        const limit = 5;
+        const { page = 1, category, sort, limit = 10 } = req.query;
 
         const query = category ? { category } : {};
 
         const options = {
             page,
-            limit,
+            limit: Number(limit),
             lean: true,
             leanWithId: false,
         };
+        if (sort) {
+            options.sort = { price: sort === 'desc' ? -1 : 1 };
+        }
 
         const products = await productModel.paginate(query, options);
 
-        res.render('products', {  products: products, style: 'index' });
+        res.render('products', {  products: products, limit: limit, category: category, sort: sort, style: 'index' });
+        
     } catch (error) {
         console.error("Error al obtener los productos:", error);
         res.send({

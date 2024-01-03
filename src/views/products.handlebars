@@ -6,6 +6,7 @@
             <div class="product-card">
                 <h2 class="product-title">{{this.title}}</h2>
                 <p class="product-description">{{this.description}}</p>
+                <p class="product-category">Categoría: {{this.category}}</p>
                 <p class="product-stock">Stock: {{this.stock}}</p>
                 <p class="product-price">${{this.price}}</p>
                 <button class="add-to-cart-button">Agregar al carrito</button>
@@ -13,21 +14,14 @@
         {{/each}}
     </div>
 
-    <form action="">
-        {{#each category.docs}}
-            <button class="category-button" data-category="{{this._id}}">
-                {{this._id}} ({{this.count}})
-            </button>
-        {{/each}}
-    </form>
 
     <div class="navPage">
         {{#if products.hasPrevPage}}
-            <a href="/api/products?page={{products.prevPage}}">Anterior</a>
+            <a href="/products?page={{products.prevPage}}&limit={{limit}}&category={{category}}&sort={{sort}}">Anterior</a>
         {{/if}}
         <span>Página {{products.page}} de {{products.totalPages}}</span>
         {{#if products.hasNextPage}}
-            <a href="/api/products?page={{products.nextPage}}">Próxima</a>
+            <a href="/products?page={{products.nextPage}}&limit={{limit}}&category={{category}}&sort={{sort}}">Próxima</a>
         {{/if}}
     </div>
 
